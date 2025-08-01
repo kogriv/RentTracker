@@ -1,0 +1,153 @@
+# Parser rules and patterns for different file formats
+
+# Sberbank Excel statement parsing rules
+sberbank_excel:
+  # Column mapping (flexible - parser will search for these patterns)
+  columns:
+    date: 
+      - "A"  # Primary column for date
+      - "B"  # Fallback column
+    time:
+      - "B"  # Time column
+    category:
+      - "D"  # Operation category
+    amount:
+      - "E"  # Amount column
+      - "F"  # Fallback amount column
+  
+  # Date parsing patterns
+  date_patterns:
+    - pattern: '(\d{2}\.\d{2}\.\d{4})'
+      format: '%d.%m.%Y'
+    - pattern: '(\d{2}/\d{2}/\d{4})'
+      format: '%d/%m/%Y'
+  
+  # Amount parsing patterns
+  amount_patterns:
+    - pattern: '\+\s*(\d[\d\s,]*\d|\d),\d{2}'
+      description: "Positive amount with spaces and comma decimal"
+    - pattern: '\+(\d+[,\.]\d{2})'
+      description: "Simple positive amount"
+  
+  # Category keywords for incoming transfers
+  incoming_keywords:
+    - "перевод"
+    - "сбп"
+    - "карту"
+    - "transfer"
+  
+  # Rows to skip (header patterns)
+  skip_patterns:
+    - "страница"
+    - "продолжение"
+    - "итого"
+    - "остаток"
+    - "qr"
+
+# Excel garage registry parsing rules  
+excel_garage:
+  # Expected header keywords (case insensitive)
+  header_keywords:
+    - "гараж"
+    - "сумма"
+    - "дата"
+    - "первоначальная"
+  
+  # Column mapping (flexible order detection)
+  expected_columns:
+    garage_id:
+      keywords: ["гараж", "номер", "id"]
+      required: true
+    amount:
+      keywords: ["сумма", "арендная", "плата", "amount"]
+      required: true
+    start_date:
+      keywords: ["дата", "первоначальная", "начальная", "date"]
+      required: true
+  
+  # Data validation rules
+  validation:
+    garage_id:
+      max_length: 20
+      pattern: '^[A-Za-z0-9\-_\s]+$'
+    amount:
+      min_value: 0.01
+      max_value: 1000000
+      decimal_places: 2
+    start_date:
+      min_year: 2020
+      max_year: 2030
+
+# Generic Excel parsing rules
+excel_generic:
+  # Maximum rows to scan for headers
+  max_header_search_rows: 20
+  
+  # Maximum empty rows before stopping
+  max_empty_rows: 5
+  
+  # Date formats to try
+  date_formats:
+    - '%d.%m.%Y'
+    - '%d/%m/%Y'  
+    - '%Y-%m-%d'
+    - '%d-%m-%Y'
+    - '%m/%d/%Y'
+  
+  # Currency symbols to clean from amounts
+  currency_symbols:
+    - '₽'
+    - 'руб'
+    - 'RUB'
+    - '$'
+    - '€'
+
+# Future: LLM parsing rules
+llm_parsing:
+  enabled: false
+  model: "gpt-3.5-turbo"
+  max_tokens: 2000
+  temperature: 0.1
+  
+  # Prompts for different parsing tasks
+  prompts:
+    garage_registry: |
+      Parse this garage registry data and extract:
+      - Garage ID
+      - Monthly rent amount  
+      - Start date
+      Return as JSON array.
+    
+    bank_statement: |
+      Parse this bank statement and extract incoming transactions:
+      - Date of transaction
+      - Amount received
+      - Transaction category
+      Return as JSON array.
+
+# File processing limits per parser type
+limits:
+  sberbank_excel:
+    max_file_size: 50MB
+    max_rows: 50000
+    timeout_seconds: 300
+  
+  excel_garage:
+    max_file_size: 10MB
+    max_rows: 10000
+    timeout_seconds: 60
+
+# Error handling configuration
+error_handling:
+  # Continue processing on non-critical errors
+  continue_on_parse_errors: true
+  
+  # Maximum number of parse errors before stopping
+  max_parse_errors: 100
+  
+  # Log detailed error information
+  detailed_error_logging: true
+  
+  # Retry configuration
+  retry_attempts: 3
+  retry_delay_seconds: 1

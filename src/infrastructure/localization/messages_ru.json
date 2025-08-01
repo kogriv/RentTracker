@@ -1,0 +1,52 @@
+{
+  "status.received": "Получен",
+  "status.overdue": "Просрочен", 
+  "status.pending": "Ожидается",
+  "status.not_due": "Срок не наступил",
+  "status.unclear": "Неопределенно",
+  
+  "report.header.garage": "Гараж",
+  "report.header.amount": "Сумма (руб.)",
+  "report.header.expected_date": "Ожидаемая дата",
+  "report.header.actual_date": "Фактическая дата",
+  "report.header.status": "Статус",
+  "report.header.days_overdue": "Дней просрочки",
+  "report.header.notes": "Примечания",
+  
+  "report.worksheet.payments": "Платежи",
+  "report.worksheet.summary": "Сводка",
+  
+  "cli.process.start": "Обработка платежей...",
+  "cli.process.complete": "Обработка завершена успешно",
+  "cli.process.failed": "Обработка не удалась",
+  "cli.report.generated": "Отчет создан: {filename}",
+  
+  "summary.title": "Сводка платежей на {date}",
+  "summary.total_garages": "Всего гаражей: {count}",
+  "summary.received": "Получено: {count}",
+  "summary.overdue": "Просрочено: {count}",
+  "summary.pending": "Ожидается: {count}",
+  "summary.not_due": "Срок не наступил: {count}",
+  "summary.unclear": "Неопределенно: {count}",
+  "summary.collection_rate": "Процент сбора: {rate}",
+  "summary.expected_amount": "Ожидаемая сумма: {amount} руб.",
+  "summary.received_amount": "Полученная сумма: {amount} руб.",
+  "summary.notes_header": "Примечания и предупреждения",
+  
+  "error.file_not_found": "Файл не найден: {filename}",
+  "error.invalid_format": "Неверный формат файла: {filename}",
+  "error.duplicate_amounts": "Найдены дублирующие суммы: {amounts}",
+  "error.parsing_failed": "Не удалось обработать файл: {filename}",
+  "error.unsupported_language": "Неподдерживаемый язык: {language}",
+  
+  "report.generated": "Отчет создан успешно",
+  
+  "notes.no_payment": "Платеж не найден",
+  "notes.payment_matched": "Платеж найден", 
+  "notes.wide_search": "Найден расширенным поиском",
+  "notes.wide_search_earliest": "Расширенный поиск - самый ранний из {count} совпадений",
+  "notes.wide_search_shared": "Найден расширенным поиском (сумма совпадает с гаражами: {garages})",
+  "notes.multiple_matches": "Найдено несколько совпадений",
+  "notes.closest_match": "Ближайший по дате",
+  "notes.amount_shared": "Сумма совпадает с гаражами: {garages}"
+}

@@ -1,0 +1,251 @@
+{% extends "base.html" %}
+
+{% block title %}Результаты обработки - Трекер Платежей за Гаражи{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12 text-center">
+            <h1 class="display-5 mb-3 text-success">
+                ✅ Обработка завершена успешно!
+            </h1>
+            <p class="lead text-muted">
+                Анализ платежей на дату: <strong>{{ report.analysis_date }}</strong>
+            </p>
+        </div>
+    </div>
+
+    <!-- Download Button -->
+    <div class="row mb-4">
+        <div class="col-12 text-center">
+            <a href="{{ url_for('download_report', filename=report.filename) }}" 
+               class="btn btn-primary btn-lg">
+                📥 Скачать отчет Excel
+            </a>
+            <a href="{{ url_for('index') }}" class="btn btn-outline-secondary btn-lg ms-3">
+                🔄 Обработать новые файлы
+            </a>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card stats-card border-0 shadow-sm h-100">
+                <div class="card-body text-center">
+                    <div class="text-primary mb-2">
+                        <i class="bi bi-house-fill" style="font-size: 2rem;"></i>
+                    </div>
+                    <h3 class="card-title text-primary">{{ report.total_garages }}</h3>
+                    <p class="card-text text-muted mb-0">Всего гаражей</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card stats-card border-0 shadow-sm h-100">
+                <div class="card-body text-center">
+                    <div class="text-success mb-2">
+                        <i class="bi bi-check-circle-fill" style="font-size: 2rem;"></i>
+                    </div>
+                    <h3 class="card-title text-success">{{ report.received_count }}</h3>
+                    <p class="card-text text-muted mb-0">Получено</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card stats-card border-0 shadow-sm h-100">
+                <div class="card-body text-center">
+                    <div class="text-danger mb-2">
+                        <i class="bi bi-exclamation-circle-fill" style="font-size: 2rem;"></i>
+                    </div>
+                    <h3 class="card-title text-danger">{{ report.overdue_count }}</h3>
+                    <p class="card-text text-muted mb-0">Просрочено</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card stats-card border-0 shadow-sm h-100">
+                <div class="card-body text-center">
+                    <div class="text-warning mb-2">
+                        <i class="bi bi-clock-fill" style="font-size: 2rem;"></i>
+                    </div>
+                    <h3 class="card-title text-warning">{{ report.pending_count }}</h3>
+                    <p class="card-text text-muted mb-0">Ожидается</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Collection Rate -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title text-center mb-4">Процент сбора платежей</h5>
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <div class="progress" style="height: 30px;">
+                                <div class="progress-bar {% if report.collection_rate >= 80 %}bg-success{% elif report.collection_rate >= 60 %}bg-warning{% else %}bg-danger{% endif %}" 
+                                     role="progressbar" 
+                                     style="width: {{ report.collection_rate }}%">
+                                    {{ "%.1f"|format(report.collection_rate) }}%
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <h3 class="mb-0 {% if report.collection_rate >= 80 %}text-success{% elif report.collection_rate >= 60 %}text-warning{% else %}text-danger{% endif %}">
+                                {{ "%.1f"|format(report.collection_rate) }}%
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Financial Summary -->
+    <div class="row mb-4">
+        <div class="col-md-6 mb-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body text-center">
+                    <div class="text-info mb-2">
+                        <i class="bi bi-calculator" style="font-size: 2rem;"></i>
+                    </div>
+                    <h4 class="card-title text-info">{{ "{:,.0f}".format(report.expected_amount) }} руб.</h4>
+                    <p class="card-text text-muted mb-0">Ожидаемая сумма</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6 mb-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body text-center">
+                    <div class="text-success mb-2">
+                        <i class="bi bi-cash-coin" style="font-size: 2rem;"></i>
+                    </div>
+                    <h4 class="card-title text-success">{{ "{:,.0f}".format(report.received_amount) }} руб.</h4>
+                    <p class="card-text text-muted mb-0">Полученная сумма</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Detailed Statistics -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-light">
+                    <h5 class="card-title mb-0">Детальная статистика</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <span><i class="bi bi-check-circle text-success me-2"></i>Получено платежей</span>
+                                    <span class="badge bg-success rounded-pill">{{ report.received_count }}</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <span><i class="bi bi-exclamation-circle text-danger me-2"></i>Просроченных платежей</span>
+                                    <span class="badge bg-danger rounded-pill">{{ report.overdue_count }}</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <span><i class="bi bi-clock text-warning me-2"></i>Ожидается платежей</span>
+                                    <span class="badge bg-warning rounded-pill">{{ report.pending_count }}</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <span><i class="bi bi-calendar text-info me-2"></i>Срок не наступил</span>
+                                    <span class="badge bg-info rounded-pill">{{ report.not_due_count }}</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Warnings -->
+    {% if report.warnings %}
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-warning">
+                <div class="card-header bg-warning text-dark">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-exclamation-triangle me-2"></i>
+                        Предупреждения
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <ul class="mb-0">
+                        {% for warning in report.warnings %}
+                        <li class="text-warning">{{ warning }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Next Steps -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card border-0 bg-light">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Что дальше?</h5>
+                    <div class="row mt-3">
+                        <div class="col-md-4 mb-2">
+                            <a href="{{ url_for('download_report', filename=report.filename) }}" 
+                               class="btn btn-outline-primary w-100">
+                                📥 Скачать Excel отчет
+                            </a>
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <a href="{{ url_for('index') }}" class="btn btn-outline-secondary w-100">
+                                🔄 Обработать новые файлы
+                            </a>
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <a href="{{ url_for('docs_index') }}" class="btn btn-outline-info w-100">
+                                📖 Просмотреть документацию
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.progress {
+    border-radius: 15px;
+}
+
+.progress-bar {
+    border-radius: 15px;
+    font-weight: bold;
+    line-height: 30px;
+}
+
+.stats-card {
+    transition: all 0.3s ease;
+}
+
+.stats-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+}
+</style>
+{% endblock %}

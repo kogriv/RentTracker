@@ -1,0 +1,180 @@
+{% extends "base.html" %}
+
+{% block title %}Документация - Трекер Платежей за Гаражи{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="display-5 mb-3">
+                📖 Документация
+            </h1>
+            <p class="lead text-muted">
+                Подробные руководства и справочная информация по использованию системы
+            </p>
+        </div>
+    </div>
+
+    <!-- Documentation Cards -->
+    <div class="row">
+        {% for doc in docs %}
+        <div class="col-lg-6 col-xl-4 mb-4">
+            <div class="card h-100 border-0 shadow-sm doc-card">
+                <div class="card-body">
+                    <div class="d-flex align-items-start mb-3">
+                        <div class="me-3">
+                            {% if 'README' in doc.filename %}
+                                <i class="bi bi-book text-primary" style="font-size: 2rem;"></i>
+                            {% elif 'INSTALLATION' in doc.filename %}
+                                <i class="bi bi-download text-success" style="font-size: 2rem;"></i>
+                            {% elif 'USER_GUIDE' in doc.filename %}
+                                <i class="bi bi-person-check text-info" style="font-size: 2rem;"></i>
+                            {% elif 'INTERACTIVE_SHELL' in doc.filename %}
+                                <i class="bi bi-terminal text-warning" style="font-size: 2rem;"></i>
+                            {% elif 'TROUBLESHOOTING' in doc.filename %}
+                                <i class="bi bi-tools text-danger" style="font-size: 2rem;"></i>
+                            {% elif 'API_REFERENCE' in doc.filename %}
+                                <i class="bi bi-code-square text-dark" style="font-size: 2rem;"></i>
+                            {% else %}
+                                <i class="bi bi-file-text text-secondary" style="font-size: 2rem;"></i>
+                            {% endif %}
+                        </div>
+                        <div class="flex-grow-1">
+                            <h5 class="card-title">{{ doc.title }}</h5>
+                            <div class="d-flex align-items-center text-muted small">
+                                <span class="me-3">
+                                    <i class="bi bi-calendar3 me-1"></i>
+                                    {{ doc.modified.strftime('%d.%m.%Y') }}
+                                </span>
+                                <span>
+                                    <i class="bi bi-file-earmark me-1"></i>
+                                    {{ "%.1f"|format(doc.size / 1024) }} KB
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Document Description -->
+                    <p class="card-text text-muted small mb-3">
+                        {% if 'README' in doc.filename %}
+                            Полное описание проекта, возможностей и быстрого старта
+                        {% elif 'INSTALLATION' in doc.filename %}
+                            Подробные инструкции по установке для Windows, Linux и macOS
+                        {% elif 'USER_GUIDE' in doc.filename %}
+                            Руководство пользователя с примерами и лучшими практиками
+                        {% elif 'INTERACTIVE_SHELL' in doc.filename %}
+                            Подробное руководство по использованию интерактивной оболочки
+                        {% elif 'TROUBLESHOOTING' in doc.filename %}
+                            Решение проблем и диагностика неполадок
+                        {% elif 'API_REFERENCE' in doc.filename %}
+                            Техническая документация по архитектуре и API
+                        {% else %}
+                            Дополнительная документация
+                        {% endif %}
+                    </p>
+                    
+                    <a href="{{ url_for('view_doc', filename=doc.filename) }}" 
+                       class="btn btn-outline-primary btn-sm">
+                        <i class="bi bi-eye me-1"></i>
+                        Просмотреть
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Quick Links -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="card border-0 bg-light">
+                <div class="card-body">
+                    <h5 class="card-title text-center mb-4">Быстрый доступ</h5>
+                    <div class="row text-center">
+                        <div class="col-md-3 mb-3">
+                            <div class="d-flex flex-column align-items-center">
+                                <i class="bi bi-rocket text-primary mb-2" style="font-size: 2rem;"></i>
+                                <h6>Быстрый старт</h6>
+                                <a href="{{ url_for('view_doc', filename='README_RU.md') }}" 
+                                   class="btn btn-sm btn-outline-primary">
+                                    Начать работу
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-3 mb-3">
+                            <div class="d-flex flex-column align-items-center">
+                                <i class="bi bi-download text-success mb-2" style="font-size: 2rem;"></i>
+                                <h6>Установка</h6>
+                                <a href="{{ url_for('view_doc', filename='INSTALLATION_RU.md') }}" 
+                                   class="btn btn-sm btn-outline-success">
+                                    Инструкция
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-3 mb-3">
+                            <div class="d-flex flex-column align-items-center">
+                                <i class="bi bi-person-check text-info mb-2" style="font-size: 2rem;"></i>
+                                <h6>Руководство</h6>
+                                <a href="{{ url_for('view_doc', filename='USER_GUIDE_RU.md') }}" 
+                                   class="btn btn-sm btn-outline-info">
+                                    Как использовать
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-3 mb-3">
+                            <div class="d-flex flex-column align-items-center">
+                                <i class="bi bi-question-circle text-warning mb-2" style="font-size: 2rem;"></i>
+                                <h6>Помощь</h6>
+                                <a href="{{ url_for('view_doc', filename='TROUBLESHOOTING_RU.md') }}" 
+                                   class="btn btn-sm btn-outline-warning">
+                                    Решение проблем
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Back to App -->
+    <div class="row mt-4">
+        <div class="col-12 text-center">
+            <a href="{{ url_for('index') }}" class="btn btn-primary">
+                <i class="bi bi-arrow-left me-2"></i>
+                Вернуться к обработке файлов
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.doc-card {
+    transition: all 0.3s ease;
+}
+
+.doc-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+}
+
+.doc-card .card-title {
+    color: #333;
+    font-weight: 600;
+}
+
+.doc-card .bi {
+    opacity: 0.8;
+}
+
+.doc-card:hover .bi {
+    opacity: 1;
+}
+</style>
+{% endblock %}

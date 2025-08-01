@@ -1,0 +1,43 @@
+{
+  "status.received": "Received",
+  "status.overdue": "Overdue",
+  "status.pending": "Pending",
+  "status.not_due": "Not Due",
+  "status.unclear": "Unclear",
+  
+  "report.header.garage": "Garage",
+  "report.header.amount": "Amount (RUB)",
+  "report.header.expected_date": "Expected Date",
+  "report.header.actual_date": "Actual Date",
+  "report.header.status": "Status",
+  "report.header.days_overdue": "Days Overdue",
+  "report.header.notes": "Notes",
+  
+  "report.worksheet.payments": "Payments",
+  "report.worksheet.summary": "Summary",
+  
+  "cli.process.start": "Processing payments...",
+  "cli.process.complete": "Processing completed successfully",
+  "cli.process.failed": "Processing failed",
+  "cli.report.generated": "Report generated: {filename}",
+  
+  "summary.title": "Payment Summary for {date}",
+  "summary.total_garages": "Total Garages: {count}",
+  "summary.received": "Received: {count}",
+  "summary.overdue": "Overdue: {count}",
+  "summary.pending": "Pending: {count}",
+  "summary.not_due": "Not Due: {count}",
+  "summary.unclear": "Unclear: {count}",
+  "summary.collection_rate": "Collection Rate: {rate}",
+  "summary.expected_amount": "Expected Amount: {amount} RUB",
+  "summary.received_amount": "Received Amount: {amount} RUB",
+  "summary.notes_header": "Notes and Warnings",
+  
+  "error.file_not_found": "File not found: {filename}",
+  "error.invalid_format": "Invalid file format: {filename}",
+  "error.duplicate_amounts": "Duplicate amounts found: {amounts}",
+  "error.parsing_failed": "Failed to parse file: {filename}",
+  "error.unsupported_language": "Unsupported language: {language}",
+  
+  "report.generated": "Report generated successfully"
+}
